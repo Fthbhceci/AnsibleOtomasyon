@@ -1,0 +1,15 @@
+---
+- name: Update and Upgrade
+  hosts: all  # Hedef sunucuların adını buraya ekleyin veya grup adını kullanın
+  become: yes              # Root yetkileriyle çalışmak için
+
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade packages
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes

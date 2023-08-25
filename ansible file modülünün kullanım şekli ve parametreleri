@@ -1,0 +1,178 @@
+Bu dosyada ansible file modülüyle alakalı tüm detaylara yer verilmeye çalışılmıştır.
+
+File modülü, dosya ve dizin işlemlerini gerçekleştirmek için kullanılır.
+
+File modulüne ait parametreler, açıklamalar ve örnekler aşağıdadır.
+
+path Parametresi:
+
+Bu parametre, hedef dosyanın veya dizinin yolunu belirtir.
+Örnek: path=/path/to/file.txt
+state Parametresi:
+
+Bu parametre, hedef dosyanın veya dizinin durumunu belirtir (örneğin, file, directory, link, absent).
+Örnek: state=file
+mode Parametresi:
+
+Bu parametre, dosya veya dizinin izinlerini (octal formatında) belirtir.
+Örnek: mode=0644
+owner Parametresi:
+
+Bu parametre, dosyanın veya dizinin sahibini belirtir.
+Örnek: owner=john
+group Parametresi:
+
+Bu parametre, dosyanın veya dizinin grubunu belirtir.
+Örnek: group=developers
+src Parametresi:
+
+Bu parametre, kopyalanacak dosyanın veya sembolik bağlantının kaynağını belirtir.
+Örnek: src=/path/to/source_file
+dest Parametresi:
+
+Bu parametre, hedef dosyanın veya sembolik bağlantının yolunu belirtir.
+Örnek: dest=/path/to/destination_file
+content Parametresi:
+
+Bu parametre, dosya içeriğini belirtir. İçerik değiştiğinde dosya oluşturulur veya güncellenir.
+Örnek: content="This is the content."
+backup Parametresi:
+
+Bu parametre, dosyanın yedeğini belirtilen dizine alır.
+Örnek: backup=yes
+unsafe_writes Parametresi:
+
+Bu parametre, Ansible'ın dosyanın izinlerini değiştirme yetkisi olmadan dosya yazmasına izin verir.
+Örnek: unsafe_writes=yes
+
+----------------------------------
+
+file modülüne ait tüm parametrelerle ilgili ad-hoc komut örneklerini aşağıda bulabilirsiniz:
+
+Dosya Oluşturma (file):
+
+ansible web_servers -m file -a "path=/path/to/file.txt state=file" --become -K
+Dizin Oluşturma (directory):
+
+ansible app_servers -m file -a "path=/path/to/directory state=directory" --become -K
+Dosya veya Dizin Silme (absent):
+
+ansible all -m file -a "path=/path/to/file_or_directory state=absent" --become -K
+Dosya Modunu Ayarlama (mode):
+
+ansible all -m file -a "path=/path/to/file.txt mode=0644" --become -K
+Dosya Sahibini Değiştirme (owner):
+
+ansible all -m file -a "path=/path/to/file.txt owner=john" --become -K
+Dosya Grubunu Değiştirme (group):
+
+ansible all -m file -a "path=/path/to/file.txt group=developers" --become -K
+Sembolik Bağlantı Oluşturma (link):
+
+ansible app_servers -m file -a "src=/path/to/source_file dest=/path/to/symlink state=link" --become -K
+Dosya İçeriği Belirleme (content):
+
+ansible app_servers -m file -a "path=/path/to/file.txt state=file content='This is the content.'" --become -K
+Dosyanın Yedeğini Alma (backup):
+
+ansible app_servers -m file -a "path=/path/to/file.txt backup=yes" --become -K
+Güvensiz Yazma Modu (unsafe_writes):
+
+ansible all -m file -a "path=/path/to/file.txt content='This is unsafe write.' unsafe_writes=yes" --become -K
+Bu komutlar, file modülünün farklı parametrelerini nasıl kullanabileceğinizi gösterir. Her bir komutun, belirli bir işlemi hedef sistemde gerçekleştirdiğini unutmayın.
+
+----------------------------------
+
+
+işte file modülünün farklı state değerleriyle kullanıldığı örnekler ve açıklamaları:
+
+Dosya Oluşturma (file):
+
+ansible web_servers -m file -a "path=/path/to/file.txt state=file" --become -K
+Bu komut, /path/to/file.txt adlı dosyanın var olup olmadığını kontrol eder. Eğer dosya yoksa, belirtilen yolda yeni bir dosya oluşturur.
+
+Dizin Oluşturma (directory):
+
+ansible app_servers -m file -a "path=/path/to/directory state=directory" --become -K
+Bu komut, /path/to/directory adlı dizinin var olup olmadığını kontrol eder. Eğer dizin yoksa, belirtilen yolda yeni bir dizin oluşturur.
+
+Dosya Silme (absent):
+
+ansible db_servers -m file -a "path=/path/to/file.txt state=absent" --become -K
+Bu komut, /path/to/file.txt adlı dosyanın var olup olmadığını kontrol eder. Eğer dosya varsa, dosyayı siler.
+
+Dosya veya Dizin Silme (absent):
+
+ansible all -m file -a "path=/path/to/directory state=absent" --become -K
+Bu komut, /path/to/directory adlı dizinin var olup olmadığını kontrol eder. Eğer dizin varsa, dizini ve içeriğini siler.
+
+Sembolik Bağlantı Oluşturma (link):
+
+ansible app_servers -m file -a "src=/path/to/source_file dest=/path/to/symlink state=link" --become -K
+Bu komut, /path/to/source_file adlı kaynak dosyanın sembolik bağlantısını /path/to/symlink adlı hedef olarak oluşturur.
+
+Dosya veya Dizin Oluşturma veya Güncelleme (touch):
+
+ansible app_servers -m file -a "path=/path/to/file.txt state=touch" --become -K
+Bu komut, /path/to/file.txt adlı dosyanın var olup olmadığını kontrol eder. Eğer dosya yoksa, yeni bir dosya oluşturur. Eğer dosya varsa, dosyanın erişim ve değiştirilme tarihlerini günceller.
+
+Her bir örnek, belirli bir state değerini kullanarak file modülünün nasıl çalıştığını gösterir.
+
+-------------------------------------------
+Aşağıda file modülüne ait örnek playbooklar görebilirsiniz.
+
+İşte bazı örnekler:
+
+Dosya Oluşturma:
+olustur.yaml
+
+- name: Oluştur
+  hosts: web_servers
+  tasks:
+    - name: Dosya oluştur
+      file:
+        path: /path/to/file.txt
+        state: touch
+      become: yes
+      become_method: sudo
+
+Dizin Oluşturma:
+olustyr.yaml
+
+- name: Dizin oluştur
+  hosts: app_servers
+  tasks:
+    - name: Dizin oluştur
+      file:
+        path: /path/to/directory
+        state: directory
+      become: yes
+      become_method: sudo
+
+Dosya Silme:
+sil.yaml
+
+- name: Sil
+  hosts: db_servers
+  tasks:
+    - name: Dosya sil
+      file:
+        path: /path/to/file.txt
+        state: absent
+      become: yes
+      become_method: sudo
+
+
+Sembolik Bağlantı Oluşturma:
+olustur.yaml
+
+- name: Bağlantı oluştur
+  hosts: app_servers
+  tasks:
+    - name: Bağlantı oluştur
+      file:
+        src: /path/to/source_file
+        dest: /path/to/symlink
+        state: link
+      become: yes
+      become_method: sudo

@@ -1,0 +1,110 @@
+Ansible'in apt modülü için yaygın olarak kullanılan bazı parametreleri açıklamak istiyorum:
+
+name: Bu parametre, hedef sunucuda hangi paketin işlem göreceğini belirtir. Genellikle tek bir paket adı veya bir paket listesi (virgülle ayrılmış) olarak belirtilir.
+
+state: Bu parametre, belirtilen paketin durumunu belirler. Kullanabileceğiniz değerler:
+
+present: Paketin yüklü olmasını sağlar. Eğer zaten yüklü ise bir şey yapmaz.
+absent: Paketin kaldırılmasını sağlar.
+latest: Eğer paket yüklü değilse, en son sürümünü yükler.
+update_cache: Bu parametre, APT önbelleğini güncellemek için kullanılır. Değer olarak yes veya no alır.
+
+upgrade: Bu parametre, paketleri güncellemek için kullanılır. Değer olarak dist verilirse, dağıtımın ana bileşenlerinin güncellenmesi sağlanır.
+
+autoremove: Bu parametre, gereksiz bağımlılıkların otomatik olarak kaldırılmasını sağlar. Değer olarak yes veya no alır.
+
+autoclean: Bu parametre, önbellekteki gereksiz dosyaların temizlenmesini sağlar. Değer olarak yes veya no alır.
+
+cache_valid_time: Bu parametre, APT önbelleğinin geçerlilik süresini belirler. Örneğin, 3600 saniye (1 saat) olarak ayarlayabilirsiniz.
+
+force: Bu parametre, zorla işlem yapmayı sağlar. Örneğin, paketi zorla yüklemek veya kaldırmak için kullanılabilir.
+
+Bu parametreler, apt modülünün kullanımında sıkça kullanılan ve işleri özelleştirmenize olanak tanıyan parametrelerdir.
+Hangi parametreleri ve değerlerini kullanmanız gerektiği, hedeflerinize ve ihtiyaçlarınıza bağlı olarak değişebilir.
+
+
+----------------------------------------------
+
+
+Apt modülünün farklı parametreleriyle ad hoc komut örnekleri:
+
+Paket Yükleme:
+
+Ad hoc komut: ansible all -m apt -a "name=nginx state=present" --become -K
+
+Bu komut, belirtilen hedef sunucularda (all) nginx paketini yükler.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Paket Kaldırma:
+
+Ad hoc komut: ansible all -m apt -a "name=apache2 state=absent" --become -K
+
+Bu komut, belirtilen hedef sunucularda (all) apache2 paketini kaldırır.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Paketleri Güncelleme:
+
+Ad hoc komut: ansible all -m apt -a "upgrade=dist autoremove=yes autoclean=yes" --become -K
+
+Bu komut, belirtilen hedef sunucularda (all) paketleri günceller (upgrade=dist) ve gereksiz bağımlılıkları temizler (autoremove=yes) 
+ve önbellekteki gereksiz dosyaları temizler (autoclean=yes).
+Not:
+--become -K parametresi şifre belirtilmeyen ve sudo yetkisiyle işlem yapılmak için kullanılır. 
+Çalıştırıldığında password sorar ve password girildikten sonra işlem yapar.
+
+
+----------------------------------------------
+
+Apt modülünün farklı parametreleriyle Playbook örnekleri:
+
+nginx.yml
+
+---
+- name: Install Nginx
+  hosts: your_target_hosts
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+Bu playbook, belirtilen hedef sunucularda (your_target_hosts) nginx paketini yükler.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+removeapache.yml
+
+---
+- name: Remove Apache
+  hosts: your_target_hosts
+  become: yes
+  tasks:
+    - name: Remove Apache
+      apt:
+        name: apache2
+        state: absent
+Bu playbook, belirtilen hedef sunucularda (your_target_hosts) apache2 paketini kaldırır.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+updateupgrade.yml
+
+---
+- name: Update Packages
+  hosts: your_target_hosts
+  become: yes
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade packages
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+Bu playbook, önce APT önbelleğini günceller (update_cache: yes), ardından tüm paketleri günceller (upgrade: dist), gereksiz bağımlılıkları temizler (autoremove: yes) ve önbellekteki gereksiz dosyaları temizler (autoclean: yes).
+
+Yukarıdaki örneklerde, your_target_hosts kısmını hedef sunucularınıza göre değiştirmeniz gerektiğini unutmayın.
