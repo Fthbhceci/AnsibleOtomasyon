@@ -27,3 +27,6 @@
 
     ## Dosya içerisinde yer alan nginx-common ve ngix-core bağıl işlemler olduğundan onları kaldırmadan nginx kaldırdığınızda  systemctl status nginx komutu sizlere
     ## yanıt olarak nginx servisinin varlığını gösterecektir.
+
+    ## Since nginx-common and ngix-core are relative processes in the file, when you remove nginx without removing them, the systemctl status nginx command will give you
+    ## will show the presence of the nginx service in response.

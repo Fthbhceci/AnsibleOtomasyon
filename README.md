@@ -1,2 +1,2 @@
 # AnsibleOtomasyon
-Ansible ile otomasyon oluşturma
+If you use ansible for automation you can check this repos.
