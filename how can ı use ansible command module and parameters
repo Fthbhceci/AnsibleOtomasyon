@@ -1,0 +1,82 @@
+Ansible'ın "command" modülü, hedef sistemde komut çalıştırmak için kullanılır.
+Bu modül, basit komutların veya komut dizilerinin uzaktaki sistemlerde çalıştırılmasını sağlar. 
+
+İşte "command" modülünün kullanımı ve parametreleri:
+
+Parametreler:
+
+command: (zorunlu) Çalıştırılacak komut veya komut dizisi. Örneğin, "ls -l /" gibi. 
+
+cmd: çalıştırılacak komut.
+
+chdir: Komutun çalıştırılacağı dizini belirtir. Bu, komutun çalıştırılacağı dizini değiştirmek için kullanılır.
+
+creates: Belirtilen dosya veya dizin zaten varsa komutun çalıştırılmayacağını belirtir. Bu, idempotency (aynı işlemi tekrar tekrar güvenli bir şekilde çalıştırabilme) sağlamak için kullanışlıdır.
+
+removes: Belirtilen dosya veya dizin varsa komutun çalıştırılacağını belirtir. Yine idempotency sağlamak için kullanışlıdır.
+
+warn: "yes" olarak ayarlanırsa, komut çıkışı herhangi bir hata olmasa bile uyarı olarak kabul edilir.
+
+stdin: Komuta iletilmesi gereken standart giriş verilerini belirtir.
+
+
+Command modülü ve farklı parametrelerini kullanarak oluşturulmuş 3 adet ad hoc komutu ve 3 adet playbook örneği:
+
+Ad hoc komut örnekleri:
+
+Temel Komut Çalıştırma:
+
+ansible target_hosts -m command -a "ls -l /"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Dizin Değiştirme:
+
+ansible target_hosts -m command -a "your_command_here" -e "chdir=/path/to/working/directory"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Dosya Oluşturma Kontrolü:
+
+ansible target_hosts -m command -a "your_command_here" -e "creates=/var/lock/app.lock"
+
+Bu ad hoc komut örnekleri, farklı senaryolarda "command" modülünün nasıl kullanılabileceğini göstermektedir. 
+target_hosts yerine hedef sunucuların gerçek adlarını veya gruplarını kullanmanız gerekecektir. 
+your_command_here kısmını gerçek bir komutla değiştirmeniz gerekecektir.
+
+
+Playbook komut örnekleri:
+
+---
+  - name: Uzak sunuculardaki tüm dosya sisteminin disk kullanımını kontrol edin
+    hosts: testservers
+    tasks:
+      - name: Df komutunu yürütün
+        register: dfout
+        command: "df -h"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+---
+  - name: tarih ve resolv.conf gösterme
+    hosts: testservers
+    tasks:
+     - name: Execute command 'date'
+       command: date
+     - name: Display resolv.conf contents
+       command: cat /etc/resolv.conf
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+---
+  - name: dosya oluşturma
+    hosts: testservers
+    tasks:
+     - name: dosya oluşturma
+       command: touch /tmp/deneme.html
+
+
+Bu playbook komut örnekleri, farklı senaryolarda "command" modülünün nasıl kullanılabileceğini göstermektedir. 
+testservers yerine hedef sunucuların gerçek adlarını veya gruplarını kullanmanız gerekecektir. 

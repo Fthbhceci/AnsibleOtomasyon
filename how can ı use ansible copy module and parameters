@@ -1,0 +1,92 @@
+
+ copy modülü, uzak hedef sistemlere dosya kopyalama görevleri gerçekleştirmek için kullanılır.
+  İşte copy modülünün temel parametreleri:
+
+src: Kopyalanacak dosyanın veya kaynağın yolu. Bu yerel Ansible kontrol makinesindeki dosya veya dizin olabilir.
+dest: Kopyalanan dosyanın hedef konumunun yolu. Bu genellikle uzak hedef makinedeki bir yol olur.
+backup: Bu parametre, hedef dosya zaten varsa yedeklemesini yapar. Varsayılan olarak no olarak ayarlıdır.
+force: Hedefdeki dosyanın varsa bile üzerine yazılmasını sağlar. Varsayılan olarak no olarak ayarlıdır.
+mode: Kopyalanan dosyanın izinleri (permissions) için kullanılır. Örneğin, "0644" gibi bir dizge olarak belirtilebilir.
+owner: Kopyalanan dosyanın sahibi olarak atanacak kullanıcı adı.
+group: Kopyalanan dosyanın atanacağı grup adı.
+seuser (SELinux User): Eğer hedef sistemde SELinux etkinse, dosyanın atanacağı SELinux kullanıcısı.
+serole (SELinux Role): Eğer hedef sistemde SELinux etkinse, dosyanın atanacağı SELinux rolü.
+setype (SELinux Type): Eğer hedef sistemde SELinux etkinse, dosyanın atanacağı SELinux türü.
+selevel (SELinux Level): Eğer hedef sistemde SELinux etkinse, dosyanın atanacağı SELinux seviyesi.
+validate: Kopyalama işlemi tamamlandıktan sonra geçerli kılınacak bir komut veya komut dosyası.
+follow: Kopyalama işlemi sırasında sembolik bağlantıları izlemeyi sağlar.
+
+copy modülü ve farklı parametrelerini kullanarak oluşturulmuş 3 adet ad hoc komutu ve 3 adet playbook örneği:
+
+Ad hoc komut örnekleri:
+
+Dosyayı Kopyala:
+ansible target_server -m copy -a "src=/path/to/local/file.txt dest=/remote/path/file.txt"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Dosyayı Kopyala ve Yetkileri Ayarla:
+ansible target_server -m copy -a "src=/path/to/local/file.txt dest=/remote/path/file.txt mode=0644 owner=remote_user group=remote_group"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Dosyayı Kopyala ve SELinux Ayarları Belirle:
+ansible target_server -m copy -a "src=/path/to/local/file.txt dest=/remote/path/file.txt seuser=system_u serole=object_r setype=etc_t selevel=s0"
+
+
+Playbook örnekleri:
+
+---
+- name: Dosya Kopyalama Playbook
+  hosts: target_servers
+  tasks:
+    - name: Dosya kopyala
+      copy:
+        src: /path/to/local/file.txt
+        dest: /remote/path/file.txt
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+---
+- name: Dosya Kopyalama ve Yetki Ayarlama Playbook
+  hosts: target_servers
+  tasks:
+    - name: Dosya kopyala
+      copy:
+        src: /path/to/local/file.txt
+        dest: /remote/path/file.txt
+        mode: '0644'
+        owner: remote_user
+        group: remote_group
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+---
+- name: SELinux Ayarları ile Dosya Kopyalama Playbook
+  hosts: target_servers
+  tasks:
+    - name: Dosya kopyala
+      copy:
+        src: /path/to/local/file.txt
+        dest: /remote/path/file.txt
+        seuser: system_u
+        serole: object_r
+        setype: etc_t
+        selevel: s0
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+Bu örneklerde, farklı parametrelerle copy modülünü nasıl kullanabileceğinizi görebilirsiniz. 
+target_servers kısmını hedeflediğiniz sunucu grup adıyla değiştirmeyi unutmayın.
+
+
+
+
+
+
