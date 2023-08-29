@@ -1,0 +1,7 @@
+---
+- name: İşletim Sistemi Debug Playbook
+  hosts: all
+  tasks:
+    - name: İşletim Sistemini Tespit Et ve Debug İle Yazdır
+      debug:
+        msg: "İşletim Sistemi: {{ ansible_distribution }} {{ ansible_distribution_version }}"
