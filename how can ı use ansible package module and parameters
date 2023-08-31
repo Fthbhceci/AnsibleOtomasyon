@@ -1,0 +1,96 @@
+Ansible'ın "package" modülü, sistemlerde paket yönetimi işlemlerini gerçekleştirmek için kullanılır. 
+Bu modül, belirli bir paketin yüklü olup olmadığını kontrol etmek, bir paketi yüklemek veya kaldırmak gibi işlemleri yapmanızı sağlar.
+
+"package" modülünün temel parametreleri şunlardır:
+
+name: İşlem yapılacak paketin adı.
+state: Paketin durumu. "present" (var), "absent" (yok), "latest" (en son sürüm), "installed" (kurulu) gibi değerler alabilir.
+update_cache: Paket deposu güncellemesi yapılıp yapılmayacağını belirler. Varsayılan olarak "no" dur.
+
+
+İşte 3 adet ad hoc komut örneği:
+
+
+Paketin varlığını kontrol etme:
+
+ansible target_server -m package -a "name=nginx state=present" -b
+
+Bu komut, "nginx" paketinin hedef sunucuda var olup olmadığını kontrol eder. "-b" bayrak yönetici (sudo) haklarıyla çalışmayı sağlar.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Paket yükleme:
+
+ansible target_servers -m package -a "name=apache2 state=latest" -b
+
+Bu komut, "apache2" paketini hedef sunuculara en son sürümünü yükler.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Paket kaldırma:
+
+ansible target_server -m package -a "name=mysql-server state=absent" -b
+
+Bu komut, "mysql-server" paketini hedef sunucudan kaldırır.
+
+
+
+3 adet playbook örneği:
+
+Paket yükleme playbook:
+
+---
+- name: Install Nginx
+  hosts: web_servers
+  become: true
+  tasks:
+    - name: Install nginx package
+      package:
+        name: nginx
+        state: present
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+Paket kaldırma playbook:
+
+
+---
+- name: Remove MySQL
+  hosts: db_servers
+  become: true
+  tasks:
+    - name: Remove mysql package
+      package:
+        name: mysql-server
+        state: absent
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+Birden fazla paket yükleme playbook:
+
+---
+- name: Install Required Packages
+  hosts: app_servers
+  become: true
+  tasks:
+    - name: Install necessary packages
+      package:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - python3
+        - python3-pip
+        - git
+
+
+
+not:
+
+Bu playbook'lar, sırasıyla Nginx kurulumu, MySQL kaldırma ve birden fazla gerekli paketin yüklenmesi işlemlerini gerçekleştirir. 
+Uygun şekilde "hosts" ve diğer parametreleri değiştirerek ihtiyaçlarınıza göre ayarlayabilirsiniz.
+

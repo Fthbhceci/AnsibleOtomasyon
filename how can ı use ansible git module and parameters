@@ -1,0 +1,89 @@
+ "git" modülü, Ansible'ın kodu bir Git deposundan almak veya yönetmek için kullanıldığı yerdir.
+ 
+  İşte "git" modülünün bazı önemli parametreleri:
+
+repo: Gerekli olan bu parametre, Git deposunun URL'sini belirtir.
+dest: Bu parametre, kodun indirileceği yerin dizin yolunu gösterir.
+version: İsteğe bağlı olarak, belirli bir dal, etiket veya taahhütü belirlemek için kullanılır.
+update: Varsayılan olarak "yes" olarak ayarlanmıştır. Eğer "no" olarak ayarlanırsa, kod sadece hedef dizinde mevcut değilse indirilir.
+force: Varsayılan olarak "no" olarak ayarlanmıştır. Eğer "yes" olarak ayarlanırsa, yerel değişiklikleri kaybetme riski olmadan kod güncellenebilir.
+
+
+Git modülü playbook örnekleri:
+
+Git Depoyu Almak ve Güncellemek:
+
+- name: Git depoyu al ve güncelle
+  hosts: my_servers
+  tasks:
+    - name: Depoyu al
+      git:
+        repo: https://github.com/kullanici/adres
+        dest: /srv/myapp
+        version: master
+        update: yes
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+Belirli Bir Taahhüdü İndirme:
+
+- name: Belirli bir taahhüdü indir
+  hosts: my_servers
+  tasks:
+    - name: Belirli taahhüdü al
+      git:
+        repo: https://github.com/kullanici/adres
+        dest: /srv/myapp
+        version: abcd1234
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+Git Depoyu İndir ve Değişiklikleri Gözden Geçirme:
+
+- name: Depoyu indir ve değişiklikleri gözden geçir
+  hosts: my_servers
+  tasks:
+    - name: Depoyu indir
+      git:
+        repo: https://github.com/kullanici/adres
+        dest: /srv/myapp
+    - name: Değişiklikleri gözden geçir
+      command: git diff HEAD~1 HEAD
+      args:
+        chdir: /srv/myapp
+
+
+
+
+Git modülü ad hoc komut örnekleri:
+
+Git Durumunu Kontrol Etmek:
+
+ansible my_server -m git -a "repo=https://github.com/kullanici/adres dest=/srv/myapp version=master"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Belirli Bir Taahhüdü İndirme:
+
+ansible my_server -m git -a "repo=https://github.com/kullanici/adres dest=/srv/myapp version=abcd1234"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Depodaki Son Değişiklikleri Görüntüleme:
+
+ansible my_server -m command -a "git log -n 5" -e "{'ansible_become': true, 'ansible_become_method': 'sudo'}"
+
+
+Not:
+Lütfen "my_servers" ve "my_server" yerine hedeflerinizi uygun şekilde değiştirin. 
+Ad Hoc komutlarında "ansible_become" parametresi, kök erişim gerektiren işlemler için kullanılabilir.
+
+
+
+
+
+
+

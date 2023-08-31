@@ -1,0 +1,83 @@
+Ansible'in "cron" modülü, hedef sistemlerde crontab görevlerini yönetmek için kullanılan bir modüldür.
+Bu modül sayesinde crontab görevlerini oluşturabilir, düzenleyebilir veya kaldırabilirsiniz. 
+
+İşte bu modülün bazı temel parametreleri:
+
+name: Crontab görevinin adını belirtir.
+minute, hour, day, month, weekday: Crontab görevinin çalışma zamanını belirlemek için kullanılan zaman parametreleri.
+job: Çalıştırılacak komut veya komut dizisi.
+state: Crontab görevinin durumu. "present" (var) veya "absent" (yok) olabilir.
+
+3 adet ad hoc komut örneği:
+
+Crontab Görevi Ekleme:
+
+ansible all -m cron -a "name=backup_job minute=0 hour=2 job='/path/to/backup_script.sh' state=present"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Crontab Görevi Düzenleme:
+
+ansible all -m cron -a "name=backup_job minute=30 hour=3 job='/path/to/updated_backup_script.sh' state=present"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Crontab Görevi Kaldırma:
+
+ansible all -m cron -a "name=backup_job state=absent"
+
+
+3 adet playbook örneği:
+
+Crontab Görevi Ekleme Playbook:
+
+- name: Add Backup Cron Job
+  hosts: all
+  tasks:
+    - name: Add cron job
+      cron:
+        name: backup_job
+        minute: "0"
+        hour: "2"
+        job: "/path/to/backup_script.sh"
+        state: present
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Crontab Görevi Düzenleme Playbook:
+
+- name: Update Backup Cron Job
+  hosts: all
+  tasks:
+    - name: Update cron job
+      cron:
+        name: backup_job
+        minute: "30"
+        hour: "3"
+        job: "/path/to/updated_backup_script.sh"
+        state: present
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+Crontab Görevi Kaldırma Playbook:
+
+- name: Remove Backup Cron Job
+  hosts: all
+  tasks:
+    - name: Remove cron job
+      cron:
+        name: backup_job
+        state: absent
+
+
+
+Not:
+
+Bu playbook örneklerinde, "all" yerine hedef host gruplarını veya hedef host isimlerini belirtebilirsiniz. Ayrıca, "backup_script.sh" ve "updated_backup_script.sh" gibi komutların gerçek dosya yollarını kullanmayı unutmayın.
+
+
+
+

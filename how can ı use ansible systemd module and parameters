@@ -1,0 +1,77 @@
+Ansible'ın systemd modülü, hedef sistemlerde Systemd servislerini yönetmek için kullanılan bir modüldür. 
+Bu modül sayesinde Systemd servislerini başlatmak, durdurmak, yeniden başlatmak, etkinleştirmek, devre dışı bırakmak gibi işlemleri otomatize edebilirsiniz.
+
+ İşte systemd modülünün temel parametreleri:
+
+name: Yönetilmek istenen Systemd servisinin adı.
+state: Servisin istenen durumu (started, stopped, restarted, reloaded, enabled, disabled, masked, unmasked, system-restart).
+enabled: Servisin otomatik olarak başlatılmasını sağlayan bir boolean değeri (yes veya no).
+masked: Servisin maskelenip maskelenmeyeceğini belirten bir boolean değeri (yes veya no).
+daemon_reload: Systemd özeti yeniden yüklenip yüklenmeyeceği (yes veya no).
+
+
+3 adet ad hoc komut örneği:
+
+Servisi Başlatma:
+
+ansible all -m systemd -a "name=httpd state=started"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Servisi Durdurma:
+
+ansible all -m systemd -a "name=httpd state=stopped"
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Servisi Yeniden Başlatma:
+
+ansible all -m systemd -a "name=httpd state=restarted"
+
+
+3 adet playbook örneği:
+
+Servisi Başlatma:
+
+---
+- name: Start Apache Service
+  hosts: <target_hosts>
+  tasks:
+    - name: Start Apache
+      systemd:
+        name: httpd
+        state: started
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+Servisi Durdurma:
+
+---
+- name: Stop Apache Service
+  hosts: <target_hosts>
+  tasks:
+    - name: Stop Apache
+      systemd:
+        name: httpd
+        state: stopped
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+---
+- name: Restart Apache Service
+  hosts: <target_hosts>
+  tasks:
+    - name: Restart Apache
+      systemd:
+        name: httpd
+        state: restarted
+
+
+
+Not:
+
+Target hosts veya all yazan kısımları kendi sunucu envanter dosyanıza göre düzenlemeniz gerekmektedir. 

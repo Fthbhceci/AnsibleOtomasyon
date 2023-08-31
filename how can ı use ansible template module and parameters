@@ -1,0 +1,53 @@
+Ansible'ın template modülü, belirli bir şablon dosyasını hedef sunucularda kullanılmak üzere özelleştirilmiş dosyalar oluşturmak için kullanılan bir modüldür. Bu modül, Jinja2 şablon motorunu kullanarak değişkenleri ve koşulları işleyerek son dosyayı oluşturmanıza yardımcı olur. Genellikle yapılandırma dosyaları oluşturmak veya özelleştirmek için kullanılır.
+
+template modülünün temel parametreleri aşağıdaki gibidir:
+
+src: Kullanılacak şablon dosyasının kaynak yolu. Bu, yüklenecek Jinja2 şablon dosyasını belirtir.
+dest: Hedef sunucuda oluşturulacak dosyanın yolunu belirtir.
+vars: Jinja2 şablonunda kullanılacak değişkenleri içeren sözlük.
+owner: Oluşturulan dosyanın sahibi.
+group: Oluşturulan dosyanın grubu.
+mode: Oluşturulan dosyanın izinleri.
+
+
+İşte template modülünün bir örnek kullanımı:
+
+Diyelim ki, bir web sunucusu yapılandırma dosyası oluşturmanız gerekiyor. Bu dosya, web sunucusunun adını ve ana dizinini içeren değişkenlere ihtiyaç duyuyor. Ayrıca, dosyanın sahibi, grubu ve izinleri de ayarlanmalıdır.
+
+Öncelikle, aşağıdaki gibi bir Jinja2 şablon dosyası (webserver.conf.j2) oluşturun:
+
+server {
+    listen 80;
+    server_name {{ server_name }};
+    root {{ document_root }};
+    ...
+}
+
+
+Sonra, bu şablonu kullanarak Ansible playbook'u oluşturabilirsiniz (webserver.yml):
+
+---
+- name: Configure Web Server
+  hosts: web_servers
+  tasks:
+    - name: Create web server config
+      template:
+        src: templates/webserver.conf.j2
+        dest: /etc/nginx/conf.d/my_website.conf
+        owner: nginx
+        group: nginx
+        mode: '0644'
+        vars:
+          server_name: example.com
+          document_root: /var/www/html
+
+
+
+
+Bu playbook, web_servers gruplarındaki hedef sunucularda, belirtilen şablonu kullanarak /etc/nginx/conf.d/my_website.conf dosyasını oluşturur. 
+server_name ve document_root değişkenleri, Jinja2 şablonunda ilgili yerlere yerleştirilir. Oluşturulan dosyanın sahibi, grubu ve izinleri de ayarlanır.
+
+Bu örnek, template modülünün temel kullanımını göstermektedir. 
+Gerçek senaryolarda daha karmaşık yapılandırmalar ve değişkenler kullanarak daha güçlü ve özelleştirilmiş dosyalar oluşturabilirsiniz.
+
+

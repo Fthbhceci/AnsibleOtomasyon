@@ -1,0 +1,82 @@
+Ansible Debug modülü, Ansible playbook'lerinizde veya role'lerinizde hata ayıklama yapmanıza yardımcı olan bir modüldür. 
+Bu modülü kullanarak değişken değerlerini, çıktıları veya belirli adımları inceleyebilirsiniz. 
+
+Modülün temel parametreleri şunlar:
+
+msg: Debug mesajını belirtir. Bu parametre, bir metin veya Jinja2 ifadesi olabilir.
+
+var: Bir değişkenin değerini görüntülemek için kullanılır. Özellikle playbook içinde veya inventory dosyasında tanımlanan değişkenleri izlemek için faydalıdır.
+
+verbosity: Debug mesajının ne kadar ayrıntılı olacağını belirler. Varsayılan olarak 2dir.
+
+verbosity_level: Debug ayrıntı düzeyini belirler. Varsayılan olarak 1dir.
+
+msg_format: Debug mesajının nasıl biçimlendirileceğini belirler. Varsayılan olarak "string"dir. "json" olarak ayarlanırsa, çıktı JSON formatında olacaktır.
+
+label: Debug çıktısının önüne ek etiket ekler. Bu, çıktıyı daha iyi organize etmenize yardımcı olabilir.
+
+Bu parametreler sayesinde Debug modülünü farklı senaryolarda kullanabilir ve playbook'lerinizin veya role'lerinizin davranışını daha iyi anlayabilirsiniz.
+
+
+Debug modülü playbook örnekleri:
+
+Bu playbook, sadece bir debug mesajını görüntülemek için Debug modülünü kullanır:
+
+
+---
+- name: Debug Message
+  hosts: localhost
+  tasks:
+    - name: Display Debug Message
+      debug:
+        msg: "This is a debug message."
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Bu playbook, bir değişkenin değerini Debug modülü ile görüntüler:
+
+---
+- name: Debug Variable
+  hosts: localhost
+  vars:
+    my_variable: "Hello, Ansible!"
+  tasks:
+    - name: Display Variable
+      debug:
+        var: my_variable
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Bu playbook, Debug modülü aracılığıyla bir matematiksel işlem sonucunu görüntüler:
+
+---
+- name: Debug Math
+  hosts: localhost
+  tasks:
+    - name: Display Math Result
+      debug:
+        msg: "Result: {{ 5 + 3 }}"
+
+
+Debug modülü ad hoc komut örnekleri:
+
+Debug Mesajı Görüntüleme
+
+ansible localhost -m debug -a "msg=This is a debug message."
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Değişken Değerini Görüntüleme
+
+ansible localhost -m debug -a "var=my_variable" -e "my_variable=Hello, Ansible!"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Matematiksel İşlem Sonucunu Görüntüleme
+
+ansible localhost -m debug -a "msg=Result: {{ 5 + 3 }}"
+
+
+
+Not: Örneklerde kullanılan localhost kısmına kendi host değerinizi yazmanız gerekmektedir.
