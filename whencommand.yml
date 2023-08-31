@@ -1,0 +1,10 @@
+---
+- name: use when command
+  hosts: all  # Hedef sunucuların adını buraya ekleyin veya grup adını kullanın
+  become: yes              # Root yetkileriyle çalışmak için
+
+  tasks:
+    - name: when command
+      apt:
+        update_cache: yes
+      when: ansible_distribution == 'Ubuntu'
