@@ -49,3 +49,5 @@ Bu komut, playbook çalıştırılırken Vault dosyasının şifresini girmenizi
 
 Bu adımlar, Ansible Vault ile çalışmanıza yardımcı olmalıdır.
  Hassas bilgilerinizi güvende tutmak için Ansible Vault'ı kullanarak verilerinizi şifreleyebilir ve yönetebilirsiniz.
+
+ ansible-playbook naber.yml --ask-vault-pass komutu örnek bir vault kullanım methodudur. ad hoc veya playbook için kullanılabilir.
