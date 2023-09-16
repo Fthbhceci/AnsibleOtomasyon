@@ -1,0 +1,51 @@
+Ansible Vault, Ansible ile hassas bilgileri güvende tutmanıza ve yönetmenize yardımcı olan bir araçtır.
+ Bu hassas bilgiler, örneğin şifreler, API anahtarları veya diğer gizli verileri içerebilir. 
+ Ansible Vault kullanarak bu bilgileri şifreleyebilir ve güvende tutabilirsiniz. 
+ 
+ İşte Ansible Vault kullanarak temel işlemleri gerçekleştirmek için adımlar:
+
+Vault Dosyası Oluşturma: İlk adım, Vault dosyasını oluşturmaktır. Bir Vault dosyası, şifrelenmiş verilerin saklandığı bir dosyadır. 
+Yeni bir Vault dosyası oluşturmak için şu komutu kullanabilirsiniz:
+
+
+ansible-vault create mysecrets.yml
+Bu komut, "mysecrets.yml" adında yeni bir Vault dosyası oluşturur ve şifreleme için bir şifre ister. 
+Şifreyi belirledikten sonra, bu dosyayı düzenlemek veya okumak için her seferinde bu şifreyi kullanmanız gerekecektir.
+
+Vault Dosyasını Düzenleme: Vault dosyasını düzenlemek için şu komutu kullanabilirsiniz:
+
+
+ansible-vault edit mysecrets.yml
+Bu komut, dosyayı düzenlemek için bir metin düzenleyici açacaktır. Şifreyi girdikten sonra, dosyayı düzenleyebilirsiniz.
+
+Vault Dosyasını Okuma: Vault dosyasındaki şifrelenmiş verileri okumak için aşağıdaki komutu kullanabilirsiniz:
+
+
+ansible-vault view mysecrets.yml
+Bu komut, dosyanın içeriğini şifre çözmeden görüntüler.
+
+Vault Dosyasını Şifreleme: Bir dosyayı şifrelemek isterseniz, aşağıdaki komutu kullanabilirsiniz:
+
+
+ansible-vault encrypt mysecrets.yml
+Bu komut, belirtilen Vault dosyasını şifreler.
+
+Vault Dosyasını Şifre Çözme: Şifrelenmiş bir Vault dosyasını şifre çözmek için aşağıdaki komutu kullanabilirsiniz:
+
+
+ansible-vault decrypt mysecrets.yml
+Bu komut, Vault dosyasını şifre çözer ve içeriğine erişim sağlar.
+
+Vault Şifresini Değiştirme: Vault dosyasının şifresini değiştirmek isterseniz, aşağıdaki komutu kullanabilirsiniz:
+
+ansible-vault rekey mysecrets.yml
+Bu komut, mevcut Vault dosyasının şifresini değiştirmenizi sağlar.
+
+Vault Dosyasını Kullanma: Vault dosyasındaki verilere Ansible playbook veya role dosyalarınızda erişmek için "ansible-vault" komutunu kullanabilirsiniz. Örneğin:
+
+
+ansible-playbook --ask-vault-pass myplaybook.yml
+Bu komut, playbook çalıştırılırken Vault dosyasının şifresini girmenizi ister ve ardından Vault içeriğine erişim sağlar.
+
+Bu adımlar, Ansible Vault ile çalışmanıza yardımcı olmalıdır.
+ Hassas bilgilerinizi güvende tutmak için Ansible Vault'ı kullanarak verilerinizi şifreleyebilir ve yönetebilirsiniz.
