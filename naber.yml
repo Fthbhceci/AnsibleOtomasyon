@@ -1,0 +1,16 @@
+---
+- name: Nginx Installation
+  hosts: all
+  become: true
+  vars_files:
+   - /home/theadmin/AnsibleOtomasyon/sifre.yml
+  vars:
+    ansible_become_pass: "{{ sifre }}"
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+
+#ansible vault ile şifreleme yaparak işlem yaptım.
