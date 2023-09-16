@@ -1,29 +1,26 @@
 ---
-- hosts: all
+- name: Nginx ve Bağımlılıklarını Kaldır
+  hosts: all
   tasks:
-    - name: "Uninstall NginX"
-      apt:
-        name: nginx
-        state: absent
-        purge: yes
+      - name: Nginx durdururr
+        shell: systemctl stop nginx
 
-    - name: "Uninstall nginx-common"
-      apt:
-        name: nginx-common
-        state: absent
-        purge: yes
+      - name: Nginx ve Bağımlılıklarını Kaldır
+        apt:
+          name: "nginx"
+          state: absent
+          autoremove: yes
+          purge: yes
 
-    - name: "Uninstall nginx-core"
-      apt:
-        name: nginx-core
-        state: absent
-        purge: yes
-
-    - name: "Stop Nginx Services"
-      service:
-        name: nginx
-        state: stopped
-        
+      - name: nginx-common Paketini Kaldır
+        apt:
+          name: nginx-common
+          state: absent
+  
+      - name: nginx-core Paketini Kaldır
+        apt:
+          name: nginx-core
+          state: absent
 
     ## Dosya içerisinde yer alan nginx-common ve ngix-core bağıl işlemler olduğundan onları kaldırmadan nginx kaldırdığınızda  systemctl status nginx komutu sizlere
     ## yanıt olarak nginx servisinin varlığını gösterecektir.

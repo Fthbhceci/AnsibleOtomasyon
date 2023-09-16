@@ -1,0 +1,15 @@
+---
+- name: /var dizinini kontrol etme
+  hosts: all # Hedef sunucunun adını veya IP adresini buraya girin
+  
+
+  tasks:
+    - name: /var dizinine git ve dizini göster
+      shell: |
+        cd /var
+        echo "Şu anki dizin: $(pwd)"
+      register: command_output
+
+    - name: Komut çıktısını görüntüle
+      debug:
+        var: command_output.stdout_lines
